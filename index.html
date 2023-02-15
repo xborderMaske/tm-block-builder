@@ -17,11 +17,21 @@
     <div class="container text-center mb-5">
         <div class="row justify-content-center">
             <div class="col-9 text-start my-4">
-                <label for="slider-title" class="form-label">Slider title (optional)</label>
-                <input id="slider-title" class="form-control form-control-lg" type="text">
+                <label for="block-title" class="form-label">Block title</label>
+                <input id="block-title" class="form-control form-control-lg" type="text">
+                <label for="block-type" class="form-label mt-3">Block type</label>
+                <select id="block-type" class="form-select form-select-lg mb-3" onchange="changeType()">
+                    <option value="specific" selected>Specific</option>
+                    <option value="search">Search</option>
+                </select>
+                <label for="block-template" class="form-label">Block template</label>
+                <select id="block-template" class="form-select form-select-lg">
+                    <option value="slider" selected>Slider</option>
+                    <option value="grid">Grid</option>
+                </select>
             </div>
             <div class="col-9">
-                <table class="table">
+                <table id="specific-cont" class="table">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -45,7 +55,7 @@
                                 <input class="form-control form-control-sm" type="text">
                             </td>
                             <td>
-                                <button id="rmv-1" type="button" class="btn btn-outline-danger" onClick="removeRow(this)">
+                                <button id="rmv-1" type="button" class="btn btn-outline-danger" onclick="removeRow(this)">
                                     <i class="bi bi-trash-fill"></i>
                                 </button>
                             </td>
@@ -57,21 +67,41 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <button type="button" class="btn btn-primary" onClick="addRow()">
+                                <button type="button" class="btn btn-primary" onclick="addRow()">
                                     <i class="bi bi-plus-circle"></i>
                                 </button>
                             </td>
                         </tr>
                     </tfoot>
                 </table>
-                <button type="button" class="btn btn-primary mb-4"onClick="processData()">
+                <div id="search-cont" class="row g-3 text-start mb-3" style="display: none;">
+                    <div class="col-md-4">
+                        <label for="search-vendor" class="form-label">Search vendor</label>
+                        <select id="search-vendor" class="form-select form-select-lg">
+                            <option value="amz" selected>Amazon</option>
+                            <option value="mcy">Macys</option>
+                            <option value="wrt">Walmart</option>
+                            <option value="ebay">Ebay</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label for="search-term" class="form-label">Search term</label>
+                        <input id="search-term" class="form-control form-control-lg" type="text">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary mb-4" onclick="processData()">
                     Create Block
                 </button>
             </div>
             <div class="col-9 text-start">
-                <textarea class="form-control" 
+                <div class="card" style="opacity: .6;">
+                    <div class="card-body">
+                        <pre class="mb-0" style="user-select: none;"><code id="code"></code></pre>
+                    </div>
+                </div>
+                <textarea class="form-control mt-2 font-monospace" 
                 id="code-input" 
-                rows="7"
+                rows="2"
                 autocomplete="off"
                 autocorrect="off"
                 spellcheck="false"
@@ -81,14 +111,14 @@
                 id="copy-btn"
                 class="btn btn-primary mt-2"
                 title="Copy to clipboard"
-                onClick="copyText(this)"
+                onclick="copyText(this)"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 data-bs-trigger="click"
                 data-bs-title="Copied to clipboard">
                     <i class="bi bi-clipboard"></i>
                 </button>
-                <button type="button" class="btn btn-primary mt-2 ms-2"onClick="loadData()">
+                <button type="button" class="btn btn-primary mt-2 ms-2" onclick="loadData()">
                     Load data from block
                 </button>
             </div>

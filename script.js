@@ -4,7 +4,7 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 const removeRow = (elmnt) => { 
     const id = 'product-' + elmnt.id.match(/(\d+)/)[0];
     document.getElementById(id).remove();
-    const prodRows = document.querySelectorAll(".prod-row");
+    const prodRows = document.querySelectorAll('.prod-row');
     for (let i = 0; i < prodRows.length; i++) {
         prodRows[i].id = `product-${i + 1}`;
         prodRows[i].querySelector('th').innerHTML = i + 1;
@@ -43,47 +43,70 @@ const addRow = () => {
 }
 
 const processData = () => {
-    let skuList = [];
-    const prodRows = document.querySelectorAll(".prod-row");
-    prodRows.forEach(prodRow => {
-        let row = {
-            product_vendor: prodRow.querySelector('.form-select').value,
-            product_sku: prodRow.querySelector('.form-control').value.trim()
+    const type = document.getElementById('block-type').value;
+    let data = '';
+    if (type === 'specific') {
+        let skuList = [];
+        const prodRows = document.querySelectorAll('.prod-row');
+        prodRows.forEach(prodRow => {
+            let row = {
+                product_vendor: prodRow.querySelector('.form-select').value,
+                product_sku: prodRow.querySelector('.form-control').value.trim()
+            };
+            skuList.push(row);
+        });
+        data = JSON.stringify(skuList).replaceAll(`"`, `'`);
+    } else if (type === 'search') {
+        const search = {
+            vendor: document.getElementById('search-vendor').value,
+            term: document.getElementById('search-term').value.trim()
         };
-        skuList.push(row);
-    });
-    const skuString = JSON.stringify(skuList).replaceAll(`"`, `'`)
+        data = JSON.stringify(search).replaceAll(`"`, `'`);
+    }
+    const skuString = data;
     const code = `{{
     block class="Magento\\Framework\\View\\Element\\Template"
-    title="${document.getElementById('slider-title').value.replaceAll(`"`, ``)}"
-    type="specific"
-    sku_list="${skuString}"
-    template="Magento_Theme::html/slider/home-product-slider.phtml"
+    title="${document.getElementById('block-title').value.replaceAll(`"`, ``)}"
+    type="${document.getElementById('block-type').value}"
+    template="${document.getElementById('block-template').value}"
+    data="${skuString}"
+    template="Magento_Theme::html/slider/landing-product-${document.getElementById('block-template').value}.phtml"
 }}`;
-    document.getElementById("code-input").value = code;
+    const codeInput = `{{block class="Magento\\Framework\\View\\Element\\Template" title="${document.getElementById('block-title').value.replaceAll(`"`, ``)}" type="${document.getElementById('block-type').value}" template="${document.getElementById('block-template').value}" data="${skuString}" template="Magento_Theme::html/slider/landing-product-${document.getElementById('block-template').value}.phtml"}}`;
+    document.getElementById('code').innerHTML = code;
+    document.getElementById('code-input').value = codeInput;
 }
 
 const loadData = () => {
-    const code = document.getElementById("code-input").value.replace(/\s/g,'');
-    const data = /.*title="(.*)"type.*sku_list="(\[\{.*\}\])"/g.exec(code);
-    document.getElementById('slider-title').value = data[1];
-    const products = JSON.parse(data[2].replaceAll(`'`, `"`));
-    for (let i = 0; i < products.length; i++) {
-        let elmnt = document.getElementById(`product-${i + 1}`);
-        if (elmnt) {
-            elmnt.querySelector('.form-select').value = products[i].product_vendor;
-            elmnt.querySelector('.form-control').value = products[i].product_sku;
-        } else {
-            addRow();
-            elmnt = document.getElementById(`product-${i + 1}`);
-            elmnt.querySelector('.form-select').value = products[i].product_vendor;
-            elmnt.querySelector('.form-control').value = products[i].product_sku;
+    const code = document.getElementById('code-input').value;
+    const data = /^.*title="(.*)" type="(.*)" template="(.*)" data="(.*)" template=".*$/g.exec(code);
+    document.getElementById('block-title').value = data[1];
+    document.getElementById('block-type').value = data[2];
+    document.getElementById('block-template').value = data[3];
+    const products = JSON.parse(data[4].replaceAll(`'`, `"`));
+    if (data[2] === 'specific') {
+        for (let i = 0; i < products.length; i++) {
+            let elmnt = document.getElementById(`product-${i + 1}`);
+            if (elmnt) {
+                elmnt.querySelector('.form-select').value = products[i].product_vendor;
+                elmnt.querySelector('.form-control').value = products[i].product_sku;
+            } else {
+                addRow();
+                elmnt = document.getElementById(`product-${i + 1}`);
+                elmnt.querySelector('.form-select').value = products[i].product_vendor;
+                elmnt.querySelector('.form-control').value = products[i].product_sku;
+            }
         }
+    } else if (data[2] === 'search') {
+        document.getElementById('search-vendor').value = products['vendor'];
+        document.getElementById('search-term').value = products['term'];
     }
+    processData();
+    changeType();
 }
 
 const copyText = (elmnt) => {
-    const copyText = document.getElementById("code-input");
+    const copyText = document.getElementById('code-input');
     navigator.clipboard.writeText(copyText.value);
     elmnt.className = 'btn btn-success mt-2';
     elmnt.querySelector('i').className = 'bi bi-clipboard-check';
@@ -92,4 +115,15 @@ const copyText = (elmnt) => {
         elmnt.querySelector('i').className = 'bi bi-clipboard';
         bootstrap.Tooltip.getInstance('#copy-btn').hide();
     }, 2000)
+}
+
+const changeType = () => {
+    const type = document.getElementById('block-type').value;
+    if (type === 'search') {
+        document.getElementById('specific-cont').style.display = 'none';
+        document.getElementById('search-cont').style.display = 'flex';
+    } else {
+        document.getElementById('specific-cont').style.display = 'table';
+        document.getElementById('search-cont').style.display = 'none';
+    }
 }
