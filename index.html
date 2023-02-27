@@ -7,11 +7,12 @@
     <title>Block Builder</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="icon" sizes="64x64" href="assets/favicon.ico">
 </head>
 <body>
     <nav class="navbar" style="background-color: #FF3C3C;">
         <div class="container justify-content-center">
-            <img src="logo.svg" alt="Bootstrap">
+            <img src="assets/logo.svg" alt="Bootstrap">
         </div>
     </nav>
     <div class="container text-center mb-5">
@@ -31,49 +32,99 @@
                 </select>
             </div>
             <div class="col-9">
-                <table id="specific-cont" class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Vendor</th>
-                            <th scope="col">SKU</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="products">
-                        <tr id="product-1" class="prod-row">
-                            <th scope="row">1</th>
-                            <td>
-                                <select class="form-select form-select-sm">
-                                    <option value="amz" selected>Amazon</option>
-                                    <option value="mcy">Macys</option>
-                                    <option value="wrt">Walmart</option>
-                                    <option value="ebay">Ebay</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input class="form-control form-control-sm" type="text">
-                            </td>
-                            <td>
-                                <button id="rmv-1" type="button" class="btn btn-outline-danger" onclick="removeRow(this)">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-primary" onclick="addRow()">
-                                    <i class="bi bi-plus-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div id="specific-cont">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Vendor</th>
+                                <th scope="col">SKU</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products">
+                            <tr id="product-1" class="prod-row">
+                                <th scope="row">1</th>
+                                <td>
+                                    <select class="form-select form-select-sm">
+                                        <option value="amz" selected>Amazon</option>
+                                        <option value="mcy">Macys</option>
+                                        <option value="wrt">Walmart</option>
+                                        <option value="ebay">Ebay</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm" type="text">
+                                </td>
+                                <td>
+                                    <button id="rmv-1" type="button" class="btn btn-outline-danger" onclick="removeRow(this)">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" onclick="addRow()">
+                                        <i class="bi bi-plus-circle"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="text-start">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="bi bi-file-earmark-arrow-up"></i> Load data from CSV file
+                        </button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Load data from CSV file</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="alert alert-warning" role="alert">
+                                            <i class="bi bi-exclamation-triangle"></i>
+                                            It's important that your original data table looks like the example shown bellow. Meaning that the first row should only be a indicator of the following rows. <strong>Keep in mind that if you dismiss this first row, the first data entry will not be loaded.</strong>
+                                        </div>
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>Vendor</td>
+                                                    <td>SKU</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>amz</td>
+                                                    <td>B000GAWSDG</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>amz</td>
+                                                    <td>B08HMRY8NG</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">4</th>
+                                                    <td>...</td>
+                                                    <td>...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="mb-3">
+                                            <input class="form-control" type="file" id="formFile" accept=".csv" onchange="readCSVFile()" data-bs-dismiss="modal">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="search-cont" class="row g-3 text-start mb-3" style="display: none;">
                     <div class="col-md-4">
                         <label for="search-vendor" class="form-label">Search vendor</label>
@@ -89,7 +140,7 @@
                         <input id="search-term" class="form-control form-control-lg" type="text">
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary mb-4" onclick="processData()">
+                <button type="button" class="btn btn-primary btn-lg mb-4" onclick="processData()">
                     Create Block
                 </button>
             </div>
@@ -118,7 +169,7 @@
                 data-bs-title="Copied to clipboard">
                     <i class="bi bi-clipboard"></i>
                 </button>
-                <button type="button" class="btn btn-primary mt-2 ms-2" onclick="loadData()">
+                <button type="button" class="btn btn-secondary mt-2 ms-2" onclick="loadData()">
                     Load data from block
                 </button>
             </div>

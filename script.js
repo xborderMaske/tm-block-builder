@@ -1,5 +1,5 @@
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
 const removeRow = (elmnt) => { 
     const id = 'product-' + elmnt.id.match(/(\d+)/)[0];
@@ -123,7 +123,61 @@ const changeType = () => {
         document.getElementById('specific-cont').style.display = 'none';
         document.getElementById('search-cont').style.display = 'flex';
     } else {
-        document.getElementById('specific-cont').style.display = 'table';
+        document.getElementById('specific-cont').style.display = 'block';
         document.getElementById('search-cont').style.display = 'none';
+    }
+}
+
+const readCSVFile = () => {
+    let files = document.querySelector('#formFile').files;
+    if(files.length > 0 ){
+        let file = files[0];
+        let reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = (event) => {
+            let csvdata = event.target.result;
+            let rowData = csvdata.split("\r\n").map((line) => {
+                let lineData = line.split(",").map((value, i) => {
+                    console.log(value);
+                    console.log(i);
+                    value.replace(/\W/g, '');
+                    if (i === 0) {
+                        value.toLowerCase();
+                        switch (value) {
+                            case 'macys':
+                            case 'mcy':
+                                value = 'mcy';
+                                break;
+                            case 'walmart':
+                            case 'wrt':
+                                value = 'wrt';
+                                break;
+                            case 'ebay':
+                                value = 'ebay';
+                                break;
+                            default:
+                                value = 'amz';
+                        }
+                    }
+                    return value
+                });
+                return lineData
+            });
+            console.log(rowData);
+            rowData.shift();
+            rowData.forEach((row, i) => {
+                let elmnt = document.getElementById(`product-${i + 1}`);
+                if (elmnt) {
+                    elmnt.querySelector('.form-select').value = row[0];
+                    elmnt.querySelector('.form-control').value = row[1];
+                } else {
+                    addRow();
+                    elmnt = document.getElementById(`product-${i + 1}`);
+                    elmnt.querySelector('.form-select').value = row[0];
+                    elmnt.querySelector('.form-control').value = row[1];
+                }
+            });
+        };
+
     }
 }
