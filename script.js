@@ -23,6 +23,7 @@ const addRow = () => {
                 <option value="mcy">Macys</option>
                 <option value="wrt">Walmart</option>
                 <option value="ebay">Ebay</option>
+                <option value="mkt">Marketplace</option>
             </select>
         </td>
         <td>
@@ -154,6 +155,10 @@ const readCSVFile = () => {
                                 break;
                             case 'ebay':
                                 value = 'ebay';
+                                break;
+                            case 'marketplace':
+                            case 'mkt':
+                                value = 'mkt';
                                 break;
                             default:
                                 value = 'amz';
