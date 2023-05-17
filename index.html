@@ -18,8 +18,15 @@
     <div class="container text-center mb-5">
         <div class="row justify-content-center">
             <div class="col-9 text-start my-4">
-                <label for="block-title" class="form-label">Block title</label>
+                <label for="block-title" class="form-label">Block title *</label>
                 <input id="block-title" class="form-control form-control-lg" type="text">
+                <label for="block-more-text" class="form-label mt-3">Block more text</label>
+                <input id="block-more-text" class="form-control form-control-lg" type="text">
+                <label for="block-more-link" class="form-label mt-3">Block more link</label>
+                <input id="block-more-link" class="form-control form-control-lg" type="text">
+                <div class="form-text">
+                    Remember to include the entire url and not just the relative path. Ex: https://www.tiendamia.com.py/search/Amazon/airpods
+                </div>
                 <label for="block-type" class="form-label mt-3">Block type</label>
                 <select id="block-type" class="form-select form-select-lg mb-3" onchange="changeType()">
                     <option value="specific" selected>Specific</option>

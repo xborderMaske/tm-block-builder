@@ -69,22 +69,26 @@ const processData = () => {
     block class="Magento\\Framework\\View\\Element\\Template"
     title="${document.getElementById('block-title').value.replaceAll(`"`, ``)}"
     type="${document.getElementById('block-type').value}"
+    moreTxt="${document.getElementById('block-more-text').value}"
+    moreLink="${document.getElementById('block-more-link').value}"
     template="${document.getElementById('block-template').value}"
     data="${skuString}"
     template="Magento_Theme::html/slider/landing-product-${document.getElementById('block-template').value}.phtml"
 }}`;
-    const codeInput = `{{block class="Magento\\Framework\\View\\Element\\Template" title="${document.getElementById('block-title').value.replaceAll(`"`, ``)}" type="${document.getElementById('block-type').value}" template="${document.getElementById('block-template').value}" data="${skuString}" template="Magento_Theme::html/slider/landing-product-${document.getElementById('block-template').value}.phtml"}}`;
+    const codeInput = `{{block class="Magento\\Framework\\View\\Element\\Template" title="${document.getElementById('block-title').value.replaceAll(`"`, ``)}" type="${document.getElementById('block-type').value}" moreTxt="${document.getElementById('block-more-text').value}" moreLink="${document.getElementById('block-more-link').value}" template="${document.getElementById('block-template').value}" data="${skuString}" template="Magento_Theme::html/slider/landing-product-${document.getElementById('block-template').value}.phtml"}}`;
     document.getElementById('code').innerHTML = code;
     document.getElementById('code-input').value = codeInput;
 }
 
 const loadData = () => {
     const code = document.getElementById('code-input').value;
-    const data = /^.*title="(.*)" type="(.*)" template="(.*)" data="(.*)" template=".*$/g.exec(code);
+    const data = /^.*title="(.*)" type="(.*)" moreTxt="(.*)" moreLink="(.*)" template="(.*)" data="(.*)" template=".*$/g.exec(code);
     document.getElementById('block-title').value = data[1];
     document.getElementById('block-type').value = data[2];
-    document.getElementById('block-template').value = data[3];
-    const products = JSON.parse(data[4].replaceAll(`'`, `"`));
+    document.getElementById('block-more-text').value = data[3];
+    document.getElementById('block-more-link').value = data[4];
+    document.getElementById('block-template').value = data[5];
+    const products = JSON.parse(data[6].replaceAll(`'`, `"`));
     if (data[2] === 'specific') {
         for (let i = 0; i < products.length; i++) {
             let elmnt = document.getElementById(`product-${i + 1}`);
